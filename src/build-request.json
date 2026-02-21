@@ -1,0 +1,134 @@
+{
+  "kind": "build_request",
+  "title": "Create PlacementPro Student Portal Application",
+  "projectName": "PlacementPro",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Replace the existing health recommendation system with a student placement portal that manages student profiles, company listings, job postings, and application tracking",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend stores student profiles with academic details (name, enrollment number, branch, CGPA, skills, resume URL)",
+        "Backend stores company information (name, description, eligibility criteria, CTC range)",
+        "Backend stores job postings linked to companies with application deadlines",
+        "Backend tracks student applications to jobs with status (applied, shortlisted, selected, rejected)",
+        "All data is persisted using stable storage in the Motoko actor"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Create a student dashboard that displays the logged-in student's profile, shows available job postings they are eligible for, and lists their application history with current status",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Dashboard shows student's personal details, CGPA, and skills",
+        "Job listings display company name, role, CTC, eligibility criteria, and application deadline",
+        "Students can filter jobs by company, CTC range, or eligibility",
+        "Application history shows company name, role, application date, and current status with visual indicators",
+        "Dashboard is responsive and uses a professional placement portal design theme"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement a job application flow where students can view job details and submit applications, with automatic eligibility checking based on CGPA and branch requirements",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend validates student eligibility (CGPA threshold, branch match) before accepting applications",
+        "Students cannot apply to the same job twice",
+        "Application submission updates the student's application list and job's applicant count",
+        "Frontend shows clear error messages for ineligible applications",
+        "Successful applications display confirmation with next steps"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Create an admin view that allows placement coordinators to add new companies, post job openings, and update application statuses for students",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend provides admin-only functions to create companies and job postings",
+        "Backend allows updating application status (shortlist, select, reject)",
+        "Admin interface shows list of all applications grouped by job with student details",
+        "Admin can view student profiles and filter by eligibility for specific jobs",
+        "Admin functions are protected and only accessible to authorized principals"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Design a professional placement portal interface with a cohesive visual theme using corporate colors (navy, teal, gold accents), clean typography, and a modern card-based layout that emphasizes clarity and professionalism",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Interface uses a professional color scheme suitable for a placement portal (avoid generic blue/purple)",
+        "Typography and spacing create a clear hierarchy for job listings and student data",
+        "Card-based layouts are used for job postings, applications, and student profiles",
+        "Responsive design works seamlessly on desktop and tablet devices",
+        "Visual theme conveys trust, professionalism, and institutional credibility"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Implement student profile creation and editing that allows users to input and update their academic details, skills, and resume link",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Students can create their profile with name, enrollment number, branch, year, CGPA, skills array, and resume URL",
+        "Profile editing updates existing data in the backend",
+        "Backend validates required fields and data formats (CGPA range 0-10, valid enrollment number)",
+        "Frontend provides a clean form interface with validation feedback",
+        "Profile completion status is shown to encourage students to complete all fields"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
+    "Do not edit files in frontend/src/components/ui directory",
+    "Maintain single-actor architecture in backend/main.mo",
+    "Use stable storage for all persistent data in the Motoko backend",
+    "Preserve Internet Identity authentication flow for user login"
+  ],
+  "nonGoals": [
+    "Real-time chat or messaging between students and recruiters",
+    "Integration with external job boards or LinkedIn APIs",
+    "Video interview scheduling or conferencing features",
+    "Email notifications or SMS alerts",
+    "Payment processing for premium job listings",
+    "Resume parsing or automated skill extraction",
+    "Third-party authentication providers beyond Internet Identity"
+  ],
+  "imageRequirements": {
+    "required": [
+      "Professional placement portal hero banner showing diverse students in professional attire with laptop and documents, modern office background (hero-banner.dim_1200x400.png)",
+      "Icon illustration representing job applications with briefcase and checkmark (job-icon.dim_128x128.png)",
+      "Icon illustration representing student profile with graduation cap and user silhouette (profile-icon.dim_128x128.png)"
+    ],
+    "edits": []
+  }
+}

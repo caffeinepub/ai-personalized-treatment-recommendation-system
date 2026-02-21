@@ -1,0 +1,215 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "PlacementPro Student Portal Frontend Implementation",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Replace health recommendation UI with student placement portal data structures and navigation",
+      "acceptanceCriteria": [
+        "Backend stores student profiles with academic details (name, enrollment number, branch, CGPA, skills, resume URL)",
+        "Backend stores company information (name, description, eligibility criteria, CTC range)",
+        "Backend stores job postings linked to companies with application deadlines",
+        "Backend tracks student applications to jobs with status (applied, shortlisted, selected, rejected)",
+        "All data is persisted using stable storage in the Motoko actor"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Replace health recommendation layout with placement portal routing structure. Add React Router with routes for StudentDashboard (/dashboard), JobDetails (/jobs/:id), ApplicationFlow (/apply/:jobId), AdminPanel (/admin), and ProfileSetup (/profile/setup). Use authorization component to guard routes and ensure users must be authenticated. Implement layout with placement portal header and navigation."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Replace healthcare branding with PlacementPro branding. Update title to 'PlacementPro Student Portal'. Replace healthcare images with generated placement portal assets at frontend/public/assets/generated/hero-banner.dim_1200x400.png. Add navigation links for Dashboard, Jobs, Profile, and conditional Admin link for admin users. Include LoginButton component for authentication."
+        },
+        {
+          "path": "frontend/src/components/Footer.tsx",
+          "operation": "modify",
+          "description": "Update footer text to reflect placement portal context. Replace medical disclaimer with institutional placement disclaimer text."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Create student dashboard displaying profile, eligible jobs, and application history",
+      "acceptanceCriteria": [
+        "Dashboard shows student's personal details, CGPA, and skills",
+        "Job listings display company name, role, CTC, eligibility criteria, and application deadline",
+        "Students can filter jobs by company, CTC range, or eligibility",
+        "Application history shows company name, role, application date, and current status with visual indicators",
+        "Dashboard is responsive and uses a professional placement portal design theme"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/StudentDashboard.tsx",
+          "operation": "create",
+          "description": "Create main dashboard page that fetches student profile using getCallerUserProfile and displays profile card showing name, email, CGPA, branches, skills, and resume link. Fetch eligible job postings using getJobPostings and filter based on student's CGPA and branch eligibility. Display job cards with company name, role, CTC range, required skills, eligibility criteria, and deadline. Fetch application history using getAppliedJobs and display with status indicators (applied, shortlisted, selected, rejected). Include filter controls for company name, CTC range, and eligibility. Use responsive grid layout with shadcn/ui Card components. Verify the authorization component's usage instructions before implementing authentication guards."
+        },
+        {
+          "path": "frontend/src/components/StudentProfileCard.tsx",
+          "operation": "create",
+          "description": "Create reusable profile card component displaying student details (name, email, CGPA, branches, skills, resume link) with edit button navigating to profile edit page. Use card-based layout with professional styling. Include generated profile icon asset at frontend/public/assets/generated/profile-icon.dim_128x128.png."
+        },
+        {
+          "path": "frontend/src/components/JobCard.tsx",
+          "operation": "create",
+          "description": "Create reusable job posting card component showing company name, job title, CTC range, required skills, eligibility criteria (min CGPA, eligible branches), application deadline, and Apply button. Include generated job icon asset at frontend/public/assets/generated/job-icon.dim_128x128.png. Add eligibility badge indicating if student meets requirements. Link to JobDetails page on click."
+        },
+        {
+          "path": "frontend/src/components/ApplicationHistoryCard.tsx",
+          "operation": "create",
+          "description": "Create card component for displaying application history entries with company name, job title, application date, and current status. Use color-coded status badges (applied: blue, reviewed: yellow, interviewed: purple, offered: green, rejected: red). Include visual status indicators and timeline styling."
+        },
+        {
+          "path": "frontend/src/hooks/useStudentDashboard.ts",
+          "operation": "create",
+          "description": "Create custom hook that orchestrates data fetching for dashboard using React Query. Fetch student profile, job postings, and application history. Implement client-side filtering logic for jobs based on student eligibility (CGPA, branches). Handle loading and error states. Return filtered jobs, applications, and profile data."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Implement job application flow with eligibility validation and confirmation",
+      "acceptanceCriteria": [
+        "Backend validates student eligibility (CGPA threshold, branch match) before accepting applications",
+        "Students cannot apply to the same job twice",
+        "Application submission updates the student's application list and job's applicant count",
+        "Frontend shows clear error messages for ineligible applications",
+        "Successful applications display confirmation with next steps"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/JobDetails.tsx",
+          "operation": "create",
+          "description": "Create detailed job view page showing complete job description, company information, eligibility requirements, salary range, required skills, and deadline. Fetch job using getJobPostings filtered by job ID from route params. Display eligibility check results for current student. Include Apply button that navigates to ApplicationFlow page. Check if student has already applied using getJobApplication and disable button if duplicate. Use professional card layout with clear information hierarchy."
+        },
+        {
+          "path": "frontend/src/pages/ApplicationFlow.tsx",
+          "operation": "create",
+          "description": "Create application submission page with pre-application eligibility confirmation screen. Display job details summary, student's qualification summary, and eligibility status. Show warning if student does not meet criteria. Include confirmation button calling backend applyForJob method. Handle success with confirmation message and navigation to dashboard. Handle eligibility errors from backend with clear error messages using toast notifications. Display application success view with next steps guidance."
+        },
+        {
+          "path": "frontend/src/components/EligibilityChecker.tsx",
+          "operation": "create",
+          "description": "Create component that checks and displays student eligibility for a job. Compare student CGPA with job minCGPA, check if student's branches overlap with eligibleBranches. Display pass/fail indicators for each criterion with icons and color coding. Show list of required skills with checkmarks for matched skills."
+        },
+        {
+          "path": "frontend/src/hooks/useJobApplication.ts",
+          "operation": "create",
+          "description": "Create custom hook for job application logic using React Query mutation. Call backend applyForJob with error handling. Invalidate relevant queries (getAppliedJobs, getJobApplication) on success. Return mutation state for loading, error, and success handling. Display toast notifications for outcomes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Create admin panel for managing companies, job postings, and application statuses",
+      "acceptanceCriteria": [
+        "Backend provides admin-only functions to create companies and job postings",
+        "Backend allows updating application status (shortlist, select, reject)",
+        "Admin interface shows list of all applications grouped by job with student details",
+        "Admin can view student profiles and filter by eligibility for specific jobs",
+        "Admin functions are protected and only accessible to authorized principals"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AdminPanel.tsx",
+          "operation": "create",
+          "description": "Create admin dashboard page with tabs for Companies, Job Postings, and Applications. Check admin status using isCallerAdmin and display AccessDeniedScreen if unauthorized. Verify the authorization component's usage instructions before implementing admin guards. Display companies list with add company form. Show job postings grouped by company with add posting form. Display applications grouped by job with student details and status update controls. Use shadcn/ui Tabs, Table, and Dialog components for interface."
+        },
+        {
+          "path": "frontend/src/components/admin/CompanyManagement.tsx",
+          "operation": "create",
+          "description": "Create admin component for managing companies. Display table of existing companies using getCompanies. Include form to add new company with fields for name, industry, and location. Call backend addCompany on submission. Use shadcn/ui Form and Table components. Handle validation and error states."
+        },
+        {
+          "path": "frontend/src/components/admin/JobPostingManagement.tsx",
+          "operation": "create",
+          "description": "Create admin component for managing job postings. Display jobs grouped by company using getJobPostings and getCompanies. Include form to create job posting with company selection, title, description, required skills (multi-select), min CGPA, eligible branches (multi-select), salary range (from-to), and optional logo URL. Call backend addJobPosting. Use shadcn/ui Form, Select, and Input components with validation."
+        },
+        {
+          "path": "frontend/src/components/admin/ApplicationManagement.tsx",
+          "operation": "create",
+          "description": "Create admin component for managing applications. Fetch all applications using getAppliedJobs (note: this returns current user's applications; adjust to admin view if needed). Group applications by job. For each application, display student name (fetch using getStudentProfile), application date, and current status. Include status update dropdown with options (applied, reviewed, interviewed, offered, rejected). Call backend updateApplicationStatus on change. Display student profile modal on click. Use shadcn/ui Table, Select, and Dialog components."
+        },
+        {
+          "path": "frontend/src/components/AccessDeniedScreen.tsx",
+          "operation": "create",
+          "description": "Create access denied component displayed to non-admin users attempting to access admin routes. Show clear message that admin privileges are required. Include button to return to dashboard. Use professional error state styling with icon."
+        },
+        {
+          "path": "frontend/src/hooks/useAdminOperations.ts",
+          "operation": "create",
+          "description": "Create custom hook for admin operations using React Query mutations. Include mutations for addCompany, addJobPosting, and updateApplicationStatus. Handle authorization errors with appropriate user feedback. Invalidate relevant queries on success. Return mutation states and functions."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Apply professional placement portal design theme with corporate colors and modern layout",
+      "acceptanceCriteria": [
+        "Interface uses a professional color scheme suitable for a placement portal (avoid generic blue/purple)",
+        "Typography and spacing create a clear hierarchy for job listings and student data",
+        "Card-based layouts are used for job postings, applications, and student profiles",
+        "Responsive design works seamlessly on desktop and tablet devices",
+        "Visual theme conveys trust, professionalism, and institutional credibility"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Replace medical-themed OKLCH color palette with professional placement portal theme using corporate colors. Define CSS variables for navy primary (#1e3a8a), teal accent (#0d9488), gold highlight (#d97706), and neutral grays. Update light and dark mode color schemes. Keep Tailwind directives and utility classes. Remove healthcare-specific styling."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Update Tailwind configuration with placement portal color system. Define custom colors for primary (navy), accent (teal), highlight (gold), and semantic colors (success, warning, error, info). Configure typography scale for clear hierarchy. Extend spacing and border radius for professional card layouts. Maintain responsive breakpoints for desktop and tablet support."
+        },
+        {
+          "path": "frontend/src/components/PlacementLayout.tsx",
+          "operation": "create",
+          "description": "Create layout component that wraps application pages with consistent header, navigation, and footer. Apply professional placement portal styling with corporate color scheme. Use generated hero banner asset at frontend/public/assets/generated/hero-banner.dim_1200x400.png in header section. Ensure responsive design with mobile-friendly navigation. Include breadcrumb navigation for deeper pages."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Implement student profile creation and editing with validation",
+      "acceptanceCriteria": [
+        "Students can create their profile with name, enrollment number, branch, year, CGPA, skills array, and resume URL",
+        "Profile editing updates existing data in the backend",
+        "Backend validates required fields and data formats (CGPA range 0-10, valid enrollment number)",
+        "Frontend provides a clean form interface with validation feedback",
+        "Profile completion status is shown to encourage students to complete all fields"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ProfileSetup.tsx",
+          "operation": "create",
+          "description": "Create profile setup page with form for first-time profile creation. Include fields: name, email, CGPA (number input 0-10), branches (multi-select), skills (tag input), resume link (URL input), and bio (textarea). Call backend createStudentProfile on submission. Use React Hook Form with Zod validation. Display validation errors inline. Show profile completion progress indicator. On success, navigate to dashboard. Verify the authorization component's usage instructions before implementing profile setup flow."
+        },
+        {
+          "path": "frontend/src/pages/ProfileEdit.tsx",
+          "operation": "create",
+          "description": "Create profile edit page with pre-filled form using getCallerUserProfile data. Include same fields as ProfileSetup. Call backend updateStudentProfile on submission. Use React Hook Form with Zod validation. Show save confirmation. Include cancel button returning to dashboard. Display profile completion percentage to encourage full completion."
+        },
+        {
+          "path": "frontend/src/components/ProfileCompletionIndicator.tsx",
+          "operation": "create",
+          "description": "Create component showing profile completion progress as percentage and visual progress bar. Calculate completion based on filled fields (name, email, CGPA, branches, skills, resume link, bio). Display missing fields list. Use encouraging messaging to prompt completion. Style with professional colors."
+        },
+        {
+          "path": "frontend/src/hooks/useStudentProfile.ts",
+          "operation": "create",
+          "description": "Create custom hook for student profile operations using React Query. Include query for getCallerUserProfile and mutations for createStudentProfile and updateStudentProfile. Handle authentication state and redirect unauthenticated users. Calculate profile completion percentage. Return profile data, loading states, and mutation functions. Verify the authorization component's usage instructions to properly handle profile state and authentication flow."
+        },
+        {
+          "path": "frontend/src/components/LoginButton.tsx",
+          "operation": "create",
+          "description": "Create login/logout button component using useInternetIdentity hook. Display 'Login' when not authenticated, 'Logout' when authenticated, and 'Logging in...' during authentication. Handle login, logout, and query cache clearing. Style button with professional placement portal theme. Verify the authorization component's usage instructions before implementing authentication logic."
+        }
+      ]
+    }
+  ]
+}

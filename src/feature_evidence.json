@@ -1,0 +1,145 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-replace-the-existing-health-recommendation-system-with-a-student-placement-portal-that-manages-student-profiles-company-listings-job-postings-and-application-tracking",
+      "featureTitle": "Replace the existing health recommendation system with a student placement portal that manages student profiles, company listings, job postings, and application tracking",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/Footer.tsx",
+        "frontend/src/components/Header.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-student-dashboard-that-displays-the-logged-in-student-s-profile-shows-available-job-postings-they-are-eligible-for-and-lists-their-application-history-with-current-status",
+      "featureTitle": "Create a student dashboard that displays the logged-in student's profile, shows available job postings they are eligible for, and lists their application history with current status",
+      "files": [
+        "frontend/src/components/ApplicationHistoryCard.tsx",
+        "frontend/src/components/JobCard.tsx",
+        "frontend/src/components/StudentProfileCard.tsx",
+        "frontend/src/hooks/useStudentDashboard.ts",
+        "frontend/src/pages/StudentDashboard.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-job-application-flow-where-students-can-view-job-details-and-submit-applications-with-automatic-eligibility-checking-based-on-cgpa-and-branch-requirements",
+      "featureTitle": "Implement a job application flow where students can view job details and submit applications, with automatic eligibility checking based on CGPA and branch requirements",
+      "files": [
+        "frontend/src/components/EligibilityChecker.tsx",
+        "frontend/src/hooks/useJobApplication.ts",
+        "frontend/src/pages/ApplicationFlow.tsx",
+        "frontend/src/pages/JobDetails.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-an-admin-view-that-allows-placement-coordinators-to-add-new-companies-post-job-openings-and-update-application-statuses-for-students",
+      "featureTitle": "Create an admin view that allows placement coordinators to add new companies, post job openings, and update application statuses for students",
+      "files": [
+        "frontend/src/components/AccessDeniedScreen.tsx",
+        "frontend/src/components/admin/ApplicationManagement.tsx",
+        "frontend/src/components/admin/CompanyManagement.tsx",
+        "frontend/src/components/admin/JobPostingManagement.tsx",
+        "frontend/src/hooks/useAdminOperations.ts",
+        "frontend/src/pages/AdminPanel.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-design-a-professional-placement-portal-interface-with-a-cohesive-visual-theme-using-corporate-colors-navy-teal-gold-accents-clean-typography-and-a-modern-card-based-layout-that-emphasizes-clarity-and-professionalism",
+      "featureTitle": "Design a professional placement portal interface with a cohesive visual theme using corporate colors (navy, teal, gold accents), clean typography, and a modern card-based layout that emphasizes clarity and professionalism",
+      "files": [
+        "frontend/src/components/PlacementLayout.tsx",
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-student-profile-creation-and-editing-that-allows-users-to-input-and-update-their-academic-details-skills-and-resume-link",
+      "featureTitle": "Implement student profile creation and editing that allows users to input and update their academic details, skills, and resume link",
+      "files": [
+        "frontend/src/components/LoginButton.tsx",
+        "frontend/src/components/ProfileCompletionIndicator.tsx",
+        "frontend/src/hooks/useStudentProfile.ts",
+        "frontend/src/pages/ProfileEdit.tsx",
+        "frontend/src/pages/ProfileSetup.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

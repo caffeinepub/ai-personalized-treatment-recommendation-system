@@ -1,2 +1,3 @@
-# ai-personalized-treatment-recommendation-system
-Exported from Caffeine project: AI Personalized Treatment Recommendation System
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

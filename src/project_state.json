@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "PlacementPro Student Portal Application",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Professional placement portal hero banner showing diverse students in professional attire with laptop and documents, modern office background (hero-banner.dim_1200x400.png)\n- Icon illustration representing job applications with briefcase and checkmark (job-icon.dim_128x128.png)\n- Icon illustration representing student profile with graduation cap and user silhouette (profile-icon.dim_128x128.png)",
+  "existing_features": [
+    {
+      "id": "feature-replace-the-existing-health-recommendation-system-with-a-student-placement-portal-that-manages-student-profiles-company-listings-job-postings-and-application-tracking",
+      "title": "Replace the existing health recommendation system with a student placement portal that manages student profiles, company listings, job postings, and application tracking",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-student-dashboard-that-displays-the-logged-in-student-s-profile-shows-available-job-postings-they-are-eligible-for-and-lists-their-application-history-with-current-status",
+      "title": "Create a student dashboard that displays the logged-in student's profile, shows available job postings they are eligible for, and lists their application history with current status",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-job-application-flow-where-students-can-view-job-details-and-submit-applications-with-automatic-eligibility-checking-based-on-cgpa-and-branch-requirements",
+      "title": "Implement a job application flow where students can view job details and submit applications, with automatic eligibility checking based on CGPA and branch requirements",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-view-that-allows-placement-coordinators-to-add-new-companies-post-job-openings-and-update-application-statuses-for-students",
+      "title": "Create an admin view that allows placement coordinators to add new companies, post job openings, and update application statuses for students",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-a-professional-placement-portal-interface-with-a-cohesive-visual-theme-using-corporate-colors-navy-teal-gold-accents-clean-typography-and-a-modern-card-based-layout-that-emphasizes-clarity-and-professionalism",
+      "title": "Design a professional placement portal interface with a cohesive visual theme using corporate colors (navy, teal, gold accents), clean typography, and a modern card-based layout that emphasizes clarity and professionalism",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-student-profile-creation-and-editing-that-allows-users-to-input-and-update-their-academic-details-skills-and-resume-link",
+      "title": "Implement student profile creation and editing that allows users to input and update their academic details, skills, and resume link",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create PlacementPro student portal application",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "PlacementPro Student Portal",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
