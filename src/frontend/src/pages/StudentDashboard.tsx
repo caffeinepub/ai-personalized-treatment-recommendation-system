@@ -1,197 +1,165 @@
+import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useStudentDashboard } from '../hooks/useStudentDashboard';
 import { StudentProfileCard } from '../components/StudentProfileCard';
 import { JobCard } from '../components/JobCard';
 import { ApplicationHistoryCard } from '../components/ApplicationHistoryCard';
+import { ProfileSetup } from './ProfileSetup';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Briefcase, FileText } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useState } from 'react';
+import { Search, Briefcase, FileText } from 'lucide-react';
 
 export function StudentDashboard() {
   const navigate = useNavigate();
-  const { identity, isInitializing } = useInternetIdentity();
-  const { profile, jobs, applications, isLoading, profileLoading, isFetched } = useStudentDashboard();
-  
-  const [searchTerm, setSearchTerm] = useState('');
-  const [ctcFilter, setCtcFilter] = useState<string>('all');
+  const { identity } = useInternetIdentity();
+  const { profile, profileLoading, profileFetched, eligibleJobs, allJobs, applications, isLoading } = useStudentDashboard();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('eligible');
 
   const isAuthenticated = !!identity;
 
-  // Show loading while initializing auth
-  if (isInitializing) {
+  const showProfileSetup = isAuthenticated && !profileLoading && profileFetched && profile === null;
+
+  if (!isAuthenticated) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-48 w-full" />
-        <Skeleton className="h-96 w-full" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Briefcase className="w-16 h-16 mx-auto text-primary" />
+          <h2 className="text-2xl font-bold">Welcome to PlacementPro</h2>
+          <p className="text-muted-foreground max-w-md">
+            Please log in to access your dashboard, view job opportunities, and manage your applications.
+          </p>
+        </div>
       </div>
     );
   }
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-primary" />
-            Authentication Required
-          </CardTitle>
-          <CardDescription>
-            Please log in to access the PlacementPro Student Portal
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4">
-            You need to be authenticated to view job postings and manage your applications.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Show profile setup prompt
-  const showProfileSetup = isAuthenticated && !profileLoading && isFetched && profile === null;
   if (showProfileSetup) {
+    return <ProfileSetup />;
+  }
+
+  if (isLoading || profileLoading) {
     return (
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>Welcome to PlacementPro!</CardTitle>
-          <CardDescription>
-            Let's set up your profile to get started
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-muted-foreground">
-            Create your student profile to access job postings and apply for placements.
-          </p>
-          <Button onClick={() => navigate({ to: '/profile/setup' })}>
-            Create Profile
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading your dashboard...</p>
+        </div>
+      </div>
     );
   }
 
-  // Filter jobs
-  const filteredJobs = jobs.filter((job) => {
-    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    let matchesCTC = true;
-    if (ctcFilter !== 'all') {
-      const minSalary = job.salaryRange[0];
-      if (ctcFilter === 'below5') matchesCTC = Number(minSalary) < 500000;
-      else if (ctcFilter === '5to10') matchesCTC = Number(minSalary) >= 500000 && Number(minSalary) < 1000000;
-      else if (ctcFilter === 'above10') matchesCTC = Number(minSalary) >= 1000000;
-    }
-    
-    return matchesSearch && matchesCTC;
-  });
+  if (!profile) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-muted-foreground">Unable to load profile. Please try refreshing the page.</p>
+          <Button onClick={() => window.location.reload()}>Refresh</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const filteredEligibleJobs = eligibleJobs.filter((job) =>
+    job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredAllJobs = allJobs.filter((job) =>
+    job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-8">
-      {/* Profile Section */}
-      {profile && <StudentProfileCard profile={profile} />}
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="md:w-1/3">
+          <StudentProfileCard profile={profile} />
+        </div>
 
-      {/* Job Listings Section */}
-      <section>
-        <div className="flex items-center justify-between mb-6">
+        <div className="md:w-2/3 space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <Briefcase className="w-6 h-6 text-primary" />
-              Available Jobs
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Browse and apply for placement opportunities
-            </p>
+            <h2 className="text-2xl font-bold mb-4">Job Opportunities</h2>
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                type="text"
+                placeholder="Search jobs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="eligible">
+                  Eligible Jobs ({filteredEligibleJobs.length})
+                </TabsTrigger>
+                <TabsTrigger value="all">
+                  All Jobs ({filteredAllJobs.length})
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="eligible" className="space-y-4 mt-4">
+                {filteredEligibleJobs.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Briefcase className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No eligible jobs found matching your criteria.</p>
+                  </div>
+                ) : (
+                  filteredEligibleJobs.map((job) => (
+                    <JobCard
+                      key={job.id.toString()}
+                      job={job}
+                      studentProfile={profile}
+                    />
+                  ))
+                )}
+              </TabsContent>
+
+              <TabsContent value="all" className="space-y-4 mt-4">
+                {filteredAllJobs.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Briefcase className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No jobs found matching your search.</p>
+                  </div>
+                ) : (
+                  filteredAllJobs.map((job) => (
+                    <JobCard
+                      key={job.id.toString()}
+                      job={job}
+                      studentProfile={profile}
+                    />
+                  ))
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
+      </div>
 
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <Input
-            placeholder="Search jobs by title or description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-1"
-          />
-          <Select value={ctcFilter} onValueChange={setCtcFilter}>
-            <SelectTrigger className="w-full sm:w-48">
-              <SelectValue placeholder="Filter by CTC" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All CTC Ranges</SelectItem>
-              <SelectItem value="below5">Below 5 LPA</SelectItem>
-              <SelectItem value="5to10">5-10 LPA</SelectItem>
-              <SelectItem value="above10">Above 10 LPA</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Job Cards */}
-        {isLoading ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-64" />
-            ))}
+      <div>
+        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+          <FileText className="w-6 h-6" />
+          Application History
+        </h2>
+        {applications.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-lg">
+            <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>You haven't applied to any jobs yet.</p>
+            <p className="text-sm mt-2">Start applying to jobs to see your application history here.</p>
           </div>
-        ) : filteredJobs.length === 0 ? (
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              No jobs found matching your criteria. Try adjusting your filters.
-            </AlertDescription>
-          </Alert>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredJobs.map((job) => (
-              <JobCard key={job.id.toString()} job={job} studentProfile={profile} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Application History Section */}
-      <section>
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <FileText className="w-6 h-6 text-primary" />
-              My Applications
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Track your application status
-            </p>
-          </div>
-        </div>
-
-        {isLoading ? (
-          <div className="space-y-4">
-            {[1, 2].map((i) => (
-              <Skeleton key={i} className="h-32" />
-            ))}
-          </div>
-        ) : applications.length === 0 ? (
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              You haven't applied to any jobs yet. Browse available jobs above to get started!
-            </AlertDescription>
-          </Alert>
-        ) : (
-          <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {applications.map((app) => (
-              <ApplicationHistoryCard key={`${app.jobId}-${app.studentId}`} application={app} />
+              <ApplicationHistoryCard key={`${app.jobId}-${app.submittedTime}`} application={app} />
             ))}
           </div>
         )}
-      </section>
+      </div>
     </div>
   );
 }

@@ -234,7 +234,7 @@ export function ProfileEdit() {
                 disabled={isUpdating || formData.branches.length === 0 || formData.skills.length === 0}
                 className="flex-1"
               >
-                {isUpdating ? 'Saving...' : 'Save Changes'}
+                {isUpdating ? 'Updating Profile...' : 'Update Profile'}
               </Button>
               <Button
                 type="button"

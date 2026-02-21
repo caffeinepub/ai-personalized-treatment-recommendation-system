@@ -1,10 +1,11 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
+  "projectStateVersion": 9,
   "summary": "PlacementPro Student Portal Application",
   "architectural_notes": [],
   "known_issues": [
-    "Login page has unwanted shaking/animation effect that needs to be removed"
+    "Login page has unwanted shaking/animation effect that needs to be removed",
+    "App not working properly - general functionality issue reported"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -63,6 +64,54 @@
         "REQ-7"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-the-caffeine-ai-attribution-link-and-text-from-the-footer-component-while-preserving-the-copyright-notice-and-institutional-placement-disclaimer",
+      "title": "Remove the caffeine.ai attribution link and text from the Footer component while preserving the copyright notice and institutional placement disclaimer",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-investigate-and-fix-any-runtime-errors-or-console-errors-preventing-the-app-from-functioning-correctly-including-authentication-flow-issues-data-fetching-failures-or-component-rendering-problems",
+      "title": "Investigate and fix any runtime errors or console errors preventing the app from functioning correctly, including authentication flow issues, data fetching failures, or component rendering problems",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-internet-identity-authentication-integration-is-working-correctly-and-users-can-successfully-log-in-and-out",
+      "title": "Verify that the Internet Identity authentication integration is working correctly and users can successfully log in and out",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-any-broken-routing-or-navigation-issues-preventing-users-from-accessing-dashboard-profile-admin-panel-or-job-details-pages",
+      "title": "Fix any broken routing or navigation issues preventing users from accessing dashboard, profile, admin panel, or job details pages",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-validate-that-all-react-query-hooks-are-properly-configured-and-data-fetching-operations-complete-successfully-without-infinite-loops-or-stale-data-issues",
+      "title": "Validate that all React Query hooks are properly configured and data fetching operations complete successfully without infinite loops or stale data issues",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-check-and-fix-any-typescript-compilation-errors-or-type-mismatches-that-may-be-causing-runtime-failures",
+      "title": "Check and fix any TypeScript compilation errors or type mismatches that may be causing runtime failures",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -70,6 +119,20 @@
       "id": "AR-1",
       "summary": "Create PlacementPro student portal application",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Remove caffine.ai watermark from the page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Ensure the backend actor initialization and canister communication is functioning properly with correct canister IDs and agent configuration",
+      "reqIds": [
+        "REQ-11"
+      ],
       "status": "pending"
     }
   ],

@@ -37,8 +37,17 @@ export function JobCard({ job, studentProfile }: JobCardProps) {
     return date.toLocaleDateString();
   };
 
+  const handleCardClick = () => {
+    navigate({ to: '/job/$jobId', params: { jobId: job.id.toString() } });
+  };
+
+  const handleViewDetails = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate({ to: '/job/$jobId', params: { jobId: job.id.toString() } });
+  };
+
   return (
-    <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate({ to: '/jobs/$jobId', params: { jobId: job.id.toString() } })}>
+    <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={handleCardClick}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -112,10 +121,7 @@ export function JobCard({ job, studentProfile }: JobCardProps) {
       <CardFooter>
         <Button
           className="w-full"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate({ to: '/jobs/$jobId', params: { jobId: job.id.toString() } });
-          }}
+          onClick={handleViewDetails}
         >
           View Details
         </Button>

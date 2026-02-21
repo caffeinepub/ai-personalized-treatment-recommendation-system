@@ -3,7 +3,6 @@ import { useActor } from './useActor';
 import { useGetCompanies, useGetJobPostings } from './useQueries';
 import { toast } from 'sonner';
 import type { ApplicationStatus } from '../backend';
-import { Principal } from '@dfinity/principal';
 
 export { useGetCompanies, useGetJobPostings };
 
@@ -18,12 +17,11 @@ export function useAddCompany() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['companies'] });
-      toast.success('Company added successfully!');
+      toast.success('Company added successfully');
     },
     onError: (error: Error) => {
-      toast.error('Failed to add company', {
-        description: error.message,
-      });
+      console.error('Failed to add company:', error);
+      toast.error('Failed to add company: ' + error.message);
     },
   });
 
@@ -63,12 +61,11 @@ export function useAddJobPosting() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['jobPostings'] });
-      toast.success('Job posting added successfully!');
+      toast.success('Job posting created successfully');
     },
     onError: (error: Error) => {
-      toast.error('Failed to add job posting', {
-        description: error.message,
-      });
+      console.error('Failed to create job posting:', error);
+      toast.error('Failed to create job posting: ' + error.message);
     },
   });
 
@@ -103,27 +100,28 @@ export function useUpdateApplicationStatus() {
 
   const mutation = useMutation({
     mutationFn: async (data: {
-      studentId: Principal;
+      studentId: string;
       jobId: bigint;
       status: ApplicationStatus;
     }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.updateApplicationStatus(data.studentId, data.jobId, data.status);
+      const { Principal } = await import('@dfinity/principal');
+      const principal = Principal.fromText(data.studentId);
+      return actor.updateApplicationStatus(principal, data.jobId, data.status);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appliedJobs'] });
       queryClient.invalidateQueries({ queryKey: ['jobApplication'] });
-      toast.success('Application status updated!');
+      toast.success('Application status updated');
     },
     onError: (error: Error) => {
-      toast.error('Failed to update status', {
-        description: error.message,
-      });
+      console.error('Failed to update application status:', error);
+      toast.error('Failed to update status: ' + error.message);
     },
   });
 
   return {
-    updateStatus: (studentId: Principal, jobId: bigint, status: ApplicationStatus) =>
+    updateStatus: (studentId: string, jobId: bigint, status: ApplicationStatus) =>
       mutation.mutateAsync({ studentId, jobId, status }),
     isUpdating: mutation.isPending,
   };

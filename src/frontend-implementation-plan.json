@@ -1,31 +1,181 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix login page shaking animation",
+  "title": "Debug and fix app functionality issues",
   "requirements": [
     {
-      "id": "REQ-7",
-      "summary": "Remove unwanted shaking, wobbling, or animation effects from the login page interface to ensure a stable, professional appearance",
+      "id": "REQ-9",
+      "summary": "Investigate and fix runtime errors, authentication flow issues, data fetching failures, and component rendering problems preventing proper app functionality",
       "acceptanceCriteria": [
-        "The login page displays without any shaking or animation effects",
-        "All login UI elements remain stationary and stable during render",
-        "The login button and authentication components appear without motion"
+        "App loads without console errors",
+        "Authentication flow completes successfully",
+        "Dashboard displays correctly for authenticated users",
+        "All navigation links work properly",
+        "Data queries execute without failures"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Review and fix actor initialization logic, ensure proper error handling for canister communication failures, verify agent configuration is correct, and add defensive checks for actor availability. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Fix query hooks to ensure proper dependency on actor availability, add error boundaries for failed queries, ensure queries are only enabled when actor is ready, and prevent queries from running before authentication completes."
+        },
+        {
+          "path": "frontend/src/hooks/useInternetIdentity.ts",
+          "operation": "modify",
+          "description": "Review authentication flow for edge cases, ensure identity persistence works correctly across page refreshes, add proper error handling for authentication failures, and verify logout clears all authentication state properly. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/StudentDashboard.tsx",
+          "operation": "modify",
+          "description": "Add loading states for all data dependencies, ensure proper error handling when profile or jobs data fails to load, verify profile completion check works correctly, and add fallback UI for missing data."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Review router configuration for any missing error boundaries, ensure all routes are properly configured with correct paths, verify QueryClientProvider has appropriate error handling configuration, and add global error boundary for uncaught errors."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Verify Internet Identity authentication integration works correctly with proper login/logout functionality and session persistence",
+      "acceptanceCriteria": [
+        "Login button triggers Internet Identity authentication flow",
+        "User identity is persisted correctly after login",
+        "Logout clears user session and redirects appropriately",
+        "useInternetIdentity hook returns correct authentication state"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/LoginButton.tsx",
           "operation": "modify",
-          "description": "Review and remove any CSS classes, inline styles, or animation properties that cause shaking/wobbling effects on the login button. Ensure transition classes are appropriate and don't cause visual instability. Remove any transform, animation, or keyframe-based effects that create unwanted motion."
+          "description": "Fix login/logout flow to handle all edge cases including already authenticated users, add proper loading state feedback during authentication, ensure query cache is cleared completely on logout, and verify disabled state prevents multiple simultaneous login attempts."
         },
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/src/hooks/useInternetIdentity.ts",
           "operation": "modify",
-          "description": "Review global styles and Tailwind configuration to identify and remove any animation utilities or custom CSS that might be causing shaking effects on authentication-related components. Check for any keyframe animations or transform properties affecting login UI elements."
+          "description": "Ensure login function properly handles authentication state transitions, verify identity persistence works across browser refreshes, fix any race conditions in authentication state updates, and ensure clear function completely resets authentication state. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Verify InternetIdentityProvider is configured correctly with proper initialization options, ensure provider wraps the entire application tree correctly, and check that authentication state is available to all child components."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Fix broken routing and navigation issues to ensure all pages are accessible and navigation works correctly",
+      "acceptanceCriteria": [
+        "All routes in App.tsx resolve correctly",
+        "Navigation between pages works without errors",
+        "URL parameters are parsed correctly",
+        "Back/forward browser navigation functions properly"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Review all route configurations for correct path definitions, ensure route parameters are defined correctly, verify lazy-loaded components are imported properly, and check that navigation guards work correctly for protected routes."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Fix navigation links to use correct routing mechanism, ensure navigation buttons properly handle authentication state, verify admin panel link only shows for admin users, and ensure all navigation triggers work without errors."
+        },
+        {
+          "path": "frontend/src/pages/JobDetails.tsx",
+          "operation": "modify",
+          "description": "Verify URL parameter parsing for job ID works correctly, ensure navigation from job cards passes correct parameters, add error handling for invalid or missing job IDs, and verify back navigation works properly."
+        },
+        {
+          "path": "frontend/src/pages/ApplicationFlow.tsx",
+          "operation": "modify",
+          "description": "Fix multi-step navigation flow to properly handle URL parameters, ensure job ID is correctly extracted and passed through all steps, verify success page navigation works correctly, and add proper error handling for navigation failures."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Validate React Query hooks are properly configured to prevent infinite loops, ensure query invalidation works correctly, and fix stale data issues",
+      "acceptanceCriteria": [
+        "useQueries hooks fetch data correctly",
+        "Query invalidation works after mutations",
+        "Loading and error states display appropriately",
+        "No infinite refetch loops occur"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Review all query hooks for proper enabled conditions to prevent premature execution, ensure query keys are stable and don't cause unnecessary refetches, verify retry logic is appropriate for each query type, and add proper error handling for all queries."
+        },
+        {
+          "path": "frontend/src/hooks/useStudentProfile.ts",
+          "operation": "modify",
+          "description": "Fix profile query to properly handle actor dependency with correct enabled condition, ensure mutations properly invalidate related queries, verify profile completion calculation doesn't trigger unnecessary refetches, and ensure custom loading state prevents flashing."
+        },
+        {
+          "path": "frontend/src/hooks/useStudentDashboard.ts",
+          "operation": "modify",
+          "description": "Fix combined query dependencies to prevent cascade refetching, ensure eligibility filtering doesn't cause performance issues, verify all dependent queries have stable keys, and add proper loading state aggregation."
+        },
+        {
+          "path": "frontend/src/hooks/useJobApplication.ts",
+          "operation": "modify",
+          "description": "Ensure application mutation properly invalidates job postings and applications queries, verify success/error callbacks don't cause query conflicts, and add proper optimistic updates where appropriate."
+        },
+        {
+          "path": "frontend/src/hooks/useAdminOperations.ts",
+          "operation": "modify",
+          "description": "Fix all admin mutations to properly invalidate related queries after success, ensure mutation callbacks don't trigger infinite refetches, verify toast notifications don't interfere with query updates, and add proper error handling for all operations."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Check and fix TypeScript compilation errors and type mismatches that may cause runtime failures",
+      "acceptanceCriteria": [
+        "No TypeScript errors in build output",
+        "All imports resolve correctly",
+        "Type definitions match actual data structures",
+        "No 'any' types masking runtime errors"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useStudentProfile.ts",
+          "operation": "modify",
+          "description": "Review all type definitions to match backend interface types, ensure UserProfile and StudentProfile types are used correctly, fix any type mismatches in query return types, and remove any 'any' types that might hide errors."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Verify all query function return types match expected types from backend interface, ensure proper typing for Option types and null handling, fix any implicit any types in query results, and verify Principal types are imported and used correctly."
+        },
+        {
+          "path": "frontend/src/components/JobCard.tsx",
+          "operation": "modify",
+          "description": "Ensure JobPosting type matches backend interface definition, verify all property accesses use correct optional chaining for nullable fields, fix any type mismatches in props or local variables, and ensure logoUrl optional field is handled correctly."
+        },
+        {
+          "path": "frontend/src/components/EligibilityChecker.tsx",
+          "operation": "modify",
+          "description": "Verify eligibility calculation uses correct types from backend interface, ensure CGPA comparison uses proper number types, fix any type issues with array comparisons for branches and skills, and verify StudentProfile type properties are accessed correctly."
         },
         {
           "path": "frontend/src/pages/StudentDashboard.tsx",
           "operation": "modify",
-          "description": "If the login UI appears on the dashboard during authentication checks, ensure there are no loading states, conditional rendering, or layout shifts that cause visual shaking. Stabilize any authentication-dependent UI rendering to prevent motion effects."
+          "description": "Review all type definitions for state variables, ensure filter logic uses correct types for comparison, verify useStudentDashboard hook return types are properly typed, and fix any type mismatches in component props."
+        },
+        {
+          "path": "frontend/src/pages/AdminPanel.tsx",
+          "operation": "modify",
+          "description": "Verify admin operations hooks are typed correctly, ensure tab component props match expected types, fix any type issues with conditional rendering based on user role, and verify all imported types match usage."
         }
       ]
     }

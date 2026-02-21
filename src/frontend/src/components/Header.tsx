@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { Briefcase, LayoutDashboard, User, Shield } from 'lucide-react';
-import { LoginButton } from './LoginButton';
+import LoginButton from './LoginButton';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useGetCallerUserRole } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,6 @@ export function Header() {
     <header className="border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 md:py-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Logo and Title */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate({ to: '/' })}>
             <img
               src="/assets/generated/hero-banner.dim_1200x400.png"
@@ -34,7 +33,6 @@ export function Header() {
             </div>
           </div>
 
-          {/* Navigation - Fixed width container to prevent layout shift */}
           <div className="flex items-center gap-2 md:gap-4 min-w-[120px] justify-end">
             {isAuthenticated ? (
               <nav className="flex items-center gap-2 md:gap-4">

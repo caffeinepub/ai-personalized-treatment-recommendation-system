@@ -1,34 +1,121 @@
 {
   "kind": "build_request",
-  "title": "Fix login page shaking animation",
-  "priority": "normal",
+  "title": "Debug and fix app functionality issues",
+  "projectName": "PlacementPro",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-7",
-      "text": "Remove any unwanted shaking, wobbling, or animation effects from the login page interface to ensure a stable, professional appearance",
-      "target": "frontend",
+      "id": "REQ-9",
+      "text": "Investigate and fix any runtime errors or console errors preventing the app from functioning correctly, including authentication flow issues, data fetching failures, or component rendering problems",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-user-final"
         ],
         "quotes": [
-          "the login page in shaking so please correct that"
+          "the app is not working properly so give me correct"
         ]
       },
       "acceptanceCriteria": [
-        "The login page displays without any shaking or animation effects",
-        "All login UI elements remain stationary and stable during render",
-        "The login button and authentication components appear without motion"
+        "App loads without console errors",
+        "Authentication flow completes successfully",
+        "Dashboard displays correctly for authenticated users",
+        "All navigation links work properly",
+        "Data queries execute without failures"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Verify that the Internet Identity authentication integration is working correctly and users can successfully log in and out",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Login button triggers Internet Identity authentication flow",
+        "User identity is persisted correctly after login",
+        "Logout clears user session and redirects appropriately",
+        "useInternetIdentity hook returns correct authentication state"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Ensure the backend actor initialization and canister communication is functioning properly with correct canister IDs and agent configuration",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend canister is reachable from frontend",
+        "Actor methods can be called successfully",
+        "Proper error handling for network failures",
+        "Access control initialization works with admin token"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Fix any broken routing or navigation issues preventing users from accessing dashboard, profile, admin panel, or job details pages",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All routes in App.tsx resolve correctly",
+        "Navigation between pages works without errors",
+        "URL parameters are parsed correctly",
+        "Back/forward browser navigation functions properly"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Validate that all React Query hooks are properly configured and data fetching operations complete successfully without infinite loops or stale data issues",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "useQueries hooks fetch data correctly",
+        "Query invalidation works after mutations",
+        "Loading and error states display appropriately",
+        "No infinite refetch loops occur"
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Check and fix any TypeScript compilation errors or type mismatches that may be causing runtime failures",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "No TypeScript errors in build output",
+        "All imports resolve correctly",
+        "Type definitions match actual data structures",
+        "No 'any' types masking runtime errors"
       ]
     }
   ],
   "constraints": [
-    "Do not modify authentication logic or Internet Identity integration",
-    "Preserve existing LoginButton functionality and state management"
+    "Do not change the backend architecture from single-actor pattern",
+    "Preserve existing Internet Identity authentication implementation",
+    "Maintain compatibility with existing data structures in backend/main.mo",
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useActor.ts, main.tsx, components/ui"
   ],
   "nonGoals": [
-    "Redesigning the login page layout or styling beyond fixing the shaking issue",
-    "Changing authentication flow or user experience"
+    "Adding new features or functionality",
+    "Redesigning the UI or visual theme",
+    "Changing technology stack or dependencies",
+    "Optimizing performance beyond fixing critical issues"
   ],
   "imageRequirements": {
     "required": [],

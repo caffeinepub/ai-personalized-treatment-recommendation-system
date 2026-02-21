@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createRouter, createRootRoute, createRoute } from '@tanstack/react-router';
-import { Toaster } from '@/components/ui/sonner';
+import { InternetIdentityProvider } from './hooks/useInternetIdentity';
 import { PlacementLayout } from './components/PlacementLayout';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { JobDetails } from './pages/JobDetails';
@@ -8,14 +8,26 @@ import { ApplicationFlow } from './pages/ApplicationFlow';
 import { AdminPanel } from './pages/AdminPanel';
 import { ProfileSetup } from './pages/ProfileSetup';
 import { ProfileEdit } from './pages/ProfileEdit';
+import { Toaster } from '@/components/ui/sonner';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 30 * 1000,
+    },
+    mutations: {
+      retry: 0,
+    },
+  },
+});
 
 const rootRoute = createRootRoute({
   component: PlacementLayout,
 });
 
-const dashboardRoute = createRoute({
+const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: StudentDashboard,
@@ -23,7 +35,7 @@ const dashboardRoute = createRoute({
 
 const jobDetailsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/jobs/$jobId',
+  path: '/job/$jobId',
   component: JobDetails,
 });
 
@@ -52,7 +64,7 @@ const profileEditRoute = createRoute({
 });
 
 const routeTree = rootRoute.addChildren([
-  dashboardRoute,
+  indexRoute,
   jobDetailsRoute,
   applicationFlowRoute,
   adminPanelRoute,
@@ -68,13 +80,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
-function App() {
+export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <InternetIdentityProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <Toaster />
+      </QueryClientProvider>
+    </InternetIdentityProvider>
   );
 }
-
-export default App;

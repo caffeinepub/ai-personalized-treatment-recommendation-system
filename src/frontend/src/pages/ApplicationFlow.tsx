@@ -87,7 +87,7 @@ export function ApplicationFlow() {
             </Button>
             <Button
               variant="outline"
-              onClick={() => navigate({ to: '/jobs/$jobId', params: { jobId: job.id.toString() } })}
+              onClick={() => navigate({ to: '/job/$jobId', params: { jobId: job.id.toString() } })}
               className="flex-1"
             >
               View Job Details
@@ -100,7 +100,7 @@ export function ApplicationFlow() {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <Button variant="ghost" onClick={() => navigate({ to: '/jobs/$jobId', params: { jobId: job.id.toString() } })}>
+      <Button variant="ghost" onClick={() => navigate({ to: '/job/$jobId', params: { jobId: job.id.toString() } })}>
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to Job Details
       </Button>
@@ -111,10 +111,8 @@ export function ApplicationFlow() {
           <CardDescription>at {company?.name || 'Company'}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Eligibility Check */}
           <EligibilityChecker job={job} studentProfile={profile} />
 
-          {/* Warning for ineligible students */}
           {!isEligible && (
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
@@ -124,7 +122,6 @@ export function ApplicationFlow() {
             </Alert>
           )}
 
-          {/* Confirmation */}
           <div className="space-y-4">
             <h3 className="font-semibold">Application Summary</h3>
             <div className="bg-muted/50 p-4 rounded-lg space-y-2">
@@ -156,7 +153,6 @@ export function ApplicationFlow() {
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className="flex gap-4">
             <Button
               size="lg"
@@ -169,7 +165,7 @@ export function ApplicationFlow() {
             <Button
               variant="outline"
               size="lg"
-              onClick={() => navigate({ to: '/jobs/$jobId', params: { jobId: job.id.toString() } })}
+              onClick={() => navigate({ to: '/job/$jobId', params: { jobId: job.id.toString() } })}
             >
               Cancel
             </Button>
