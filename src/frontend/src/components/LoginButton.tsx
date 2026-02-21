@@ -33,22 +33,22 @@ export function LoginButton() {
       disabled={disabled}
       variant={isAuthenticated ? 'outline' : 'default'}
       size="sm"
-      className="flex items-center gap-2"
+      className="flex items-center gap-2 min-w-[100px] justify-center"
     >
       {disabled ? (
         <>
           <Loader2 className="w-4 h-4 animate-spin" />
-          Logging in...
+          <span>Logging in...</span>
         </>
       ) : isAuthenticated ? (
         <>
           <LogOut className="w-4 h-4" />
-          Logout
+          <span>Logout</span>
         </>
       ) : (
         <>
           <LogIn className="w-4 h-4" />
-          Login
+          <span>Login</span>
         </>
       )}
     </Button>

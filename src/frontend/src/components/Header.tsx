@@ -34,47 +34,45 @@ export function Header() {
             </div>
           </div>
 
-          {/* Navigation */}
-          {isAuthenticated && (
-            <nav className="flex items-center gap-2 md:gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate({ to: '/' })}
-                className="flex items-center gap-2"
-              >
-                <LayoutDashboard className="w-4 h-4" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate({ to: '/profile/edit' })}
-                className="flex items-center gap-2"
-              >
-                <User className="w-4 h-4" />
-                <span className="hidden sm:inline">Profile</span>
-              </Button>
-              {isAdmin && (
+          {/* Navigation - Fixed width container to prevent layout shift */}
+          <div className="flex items-center gap-2 md:gap-4 min-w-[120px] justify-end">
+            {isAuthenticated ? (
+              <nav className="flex items-center gap-2 md:gap-4">
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => navigate({ to: '/admin' })}
+                  onClick={() => navigate({ to: '/' })}
                   className="flex items-center gap-2"
                 >
-                  <Shield className="w-4 h-4" />
-                  <span className="hidden sm:inline">Admin</span>
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span className="hidden sm:inline">Dashboard</span>
                 </Button>
-              )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate({ to: '/profile/edit' })}
+                  className="flex items-center gap-2"
+                >
+                  <User className="w-4 h-4" />
+                  <span className="hidden sm:inline">Profile</span>
+                </Button>
+                {isAdmin && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate({ to: '/admin' })}
+                    className="flex items-center gap-2"
+                  >
+                    <Shield className="w-4 h-4" />
+                    <span className="hidden sm:inline">Admin</span>
+                  </Button>
+                )}
+                <LoginButton />
+              </nav>
+            ) : (
               <LoginButton />
-            </nav>
-          )}
-
-          {!isAuthenticated && (
-            <div className="flex items-center gap-4">
-              <LoginButton />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </header>
